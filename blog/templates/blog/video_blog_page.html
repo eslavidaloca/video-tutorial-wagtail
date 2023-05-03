@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% load wagtailimages_tags wagtailcore_tags %}
+
+{% block content %}
+    {% image page.banner_image fill-2000x200 as banner %}
+    <img src="{{ banner.url }}" alt="{{ banner.alt }}" style="widht: 100%; height: auto;">
+    
+    <div class="container mt-5 mb-5">
+        <div class="text-center">
+            <h1>
+                {% if page.custom_title %}
+                    {{ page.custom_title }}
+                {% else %}
+                    {{ page.title }}
+                {% endif %}
+            </h1>
+            {% if page.categories.count %}
+                <div style="padding: 0 20px 20px">
+                    {% for cat in page.categories.all %}
+                        <a href="?category={{ cat.slug }}">
+                            {{ cat.name }}
+                        </a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="d-flex justify-content-center">
+                {% for iter in self.blog_authors.all %}
+                    {% image iter.author.image fill-50x50 as img %}
+                    <div>
+                        <img src="{{ img.url }}" alt="{{ iter.author.name }}" class="rounded-circle">
+                    </div>
+                    {% if iter.author.website %}
+                        <a href="{{ iter.author.website }}">
+                            {{ iter.author.name }}
+                        </a>
+                    {% else %}
+                        {{ iter.author.name }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ page.youtube_video_id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;<iframe width="560" height="315" src="https://www.youtube.com/embed/MpOG56E0VaQ" title="YouTube video player" frameborder="0" allow="accelerometer web-share" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                {% for block in page.content %}
+                    {% include_block block %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% load wagtailimages_tags wagtailcore_tags %}
+
+{% block content %}
+    {% image page.blog_image fill-1200x400 as banner %}
+    <img src="{{ banner.url }}" alt="{{ banner.alt }}" style="widht: 100%; height: auto;">
+
+    <div class="container mt-5 mb-5">
+        <div class="text-center">
+            <h1>{{ page.custom_title }}</h1>
+        </div>
+    </div>
+
+    <ul>
+        {% for iter in self.blog_authors.all %}
+            {% image iter.author.image fill-50x50 as img %}
+            <li class="mt-3 mb-3">
+                <img src="{{ img.url }}" alt="{{ iter.author.name }}">
+                {{ iter.author.name }}
+                {% if iter.author.website %}
+                    <a href="{{ iter.author.website }}">
+                        (website)
+                    </a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Categories</h2>
+    <ul>
+        {% for cat in page.categories.all %}
+            <li>
+                <a href="{{ page.get_parent.url }}?category={{ cat.slug }}">
+                    {{ cat.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                {% for block in page.content %}
+                    {% include_block block %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
